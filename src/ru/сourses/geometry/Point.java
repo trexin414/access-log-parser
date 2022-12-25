@@ -25,8 +25,8 @@ public class Point {
         this.y = y;
     }
 
-    public static boolean toEqual(Point a, Point b){
-        return ((a.x == b.x) && (a.y == b.y));
+    public boolean equals(Point p){
+        return this.x == p.x && this.y == p.y;
     }
 
     @Override

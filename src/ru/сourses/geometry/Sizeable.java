@@ -40,6 +40,22 @@ class ClosePolyLine extends PolyLine implements Sizeable{
         size += Math.sqrt(Math.pow(points[points.length - 1].x-points[0].x, 2) + Math.pow(points[points.length - 1].y-points[0].y, 2));
         return size;
     }
+    public static double sum(Sizeable... sizeables){
+        double sum = 0;
+        for (Sizeable s:sizeables)
+            sum += s.length();
+        return sum;
+    }
+
+    public static void main(String[] args) {
+//        PolyLine polyLine= new PolyLine(new Point2(0,0), new Point2(4,4), new Point2(9,4), new Point2(12, 0));
+//        ClosePolyLine closePolyLine = new ClosePolyLine(new Point2(0,0), new Point2(4,4), new Point2(9,4), new Point2(12, 0));
+//        Sizeable s = polyLine;
+//        System.out.println(s.length());
+//        s = new ClosePolyLine(new Point2(0,0), new Point2(4,4), new Point2(9,4), new Point2(12, 0));
+//        System.out.println(s.length());
+//        System.out.println(sum(polyLine,closePolyLine));
+    }
 }
 
 class TestString implements Sizeable{
@@ -56,4 +72,7 @@ class TestString implements Sizeable{
 
 public interface Sizeable{
     double length();
+
 }
+
+
