@@ -37,8 +37,8 @@ public class Main {
             while ((line = reader.readLine()) != null) {
                 int length = line.length();
                 if (length > 1024) throw new LengthExceptions("Длина строки " + (lines.size() + 1) + " больше 1024 символов");
-                if (length > max) max = length;
                 if (length < min) min = length;
+                if (length > max) max = length;
                 lines.add(line);
             }
             System.out.println("Кол-во строк в файле = " + lines.size());
