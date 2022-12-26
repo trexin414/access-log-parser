@@ -1,26 +1,19 @@
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
-    private static final String YANDEX_BOT = "YandexBot";
-    private static final String GOOGLE_BOT = "GoogleBot";
-    private static final String GOOGLE_BOT_SMALL = "Googlebot";
-    public static void main(String[] args) {
-        int count = 1, googlebotCount = 0, yandexCount = 0, googleBotCount = 0;
-        String path = "access.log", ip = "", date = "", method = "", httpCode = "", size = "", httpPage = "", uAgent = "", comp = "", fragment = "";
-        List<String> lines = new ArrayList<>();
-        HashMap<String, HashMap<String, String>> mapLine = new HashMap<>();
-        Pattern ipPattern = Pattern.compile("^(\\d{1,3}[\\.]){3}\\d{1,3}");
-        Pattern datePattern = Pattern.compile("\\[((\\w+\\/){2}(\\d+\\:){3}\\d+\\ (\\+|-)\\d+)]");
-        Pattern methodPattern = Pattern.compile("GET\\s+\\/.*\\HTTP\\/(\\w.\\w|\\w)");
-        Pattern codeAndSizePattern = Pattern.compile("\\ (\\d*) (\\d*) ");
-        Pattern httpPagePattern = Pattern.compile("\"https:.*\"");
-        Pattern compatiblePattern = Pattern.compile("(compatible;.*)\\)");
-        Pattern botPattern = Pattern.compile("(\\w+)\\/");
 
-        Matcher matcher;
+    public static void main(String[] args) {
+        int count = 1;
+        String path = "access.log";
+
+        List<String> lines = new ArrayList<>();
+        HashMap<String, Object> result = new HashMap<>();
+        Statistics statistics = new Statistics();
 
         while (true){
 //            System.out.println("Введите путь до файла:");
@@ -55,47 +48,9 @@ public class Main {
         }
 
         for (String line: lines){
-            matcher = ipPattern.matcher(line);
-            if (matcher.find()) ip = matcher.group();
-
-            matcher = datePattern.matcher(line);
-            if (matcher.find()) date = matcher.group(1);
-
-            matcher = methodPattern.matcher(line);
-            if (matcher.find()) method = matcher.group();
-
-            matcher = codeAndSizePattern.matcher(line);
-            if (matcher.find()) {
-                httpCode = matcher.group(1);
-                size = matcher.group(2);
-            }
-
-            matcher = httpPagePattern.matcher(line);
-            if(matcher.find()) httpPage = matcher.group();
-
-            uAgent = line.substring(line.lastIndexOf("\"", line.lastIndexOf("\"") - 1) + 1, line.lastIndexOf("") - 1);
-
-            matcher = compatiblePattern.matcher(uAgent);
-            if (matcher.find()) comp = matcher.group(1);
-
-            List<String> parts = Arrays.asList(comp.split(";"));
-
-            parts.replaceAll(s -> s.replace(" ", ""));
-
-            for(String s: parts){
-                matcher = botPattern.matcher(s);
-                if (matcher.find()) {
-                    fragment = matcher.group(1);
-                    break;
-                }
-            }
-
-            if(fragment.equals(YANDEX_BOT)) yandexCount++;
-            if(fragment.equals(GOOGLE_BOT)) googleBotCount++;
-            if(fragment.equals(GOOGLE_BOT_SMALL)) googlebotCount++;
+            statistics.addEntry(new LogEntry(line));
         }
-        System.out.println("Доля запросов от YandexBot = " + (double) yandexCount / lines.size());
-        System.out.println("Доля запросов от GoogleBot = " + (double) googleBotCount / lines.size());
-        System.out.println("Доля запросов от Googlebot = " + (double) googlebotCount / lines.size());
+
+        System.out.println(statistics.getTrafficRate());
     }
 }
