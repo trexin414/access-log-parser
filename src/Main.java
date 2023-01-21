@@ -56,5 +56,9 @@ public class Main {
 //        System.out.println(statistics.returnPages());
 //        System.out.println(statistics.returnOS());
 //        System.out.println(statistics.returnPercentOS());
+        statistics.returnPercentBrowsers();
+//        System.out.println(statistics.returnPages404());
+//        System.out.println(statistics.returnBrowser());
+//        System.out.println(statistics.returnPercentBrowsers());
     }
 }
