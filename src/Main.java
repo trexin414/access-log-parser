@@ -60,5 +60,9 @@ public class Main {
 //        System.out.println(statistics.returnPages404());
 //        System.out.println(statistics.returnBrowser());
 //        System.out.println(statistics.returnPercentBrowsers());
+
+        System.out.println("Посещение пользователей в час = " + statistics.returnPplPerHour());
+        System.out.println("Запросов с ошибками = " + statistics.returnErrPerHour());
+        System.out.println("Кол-во посещений одним пользователем = " + statistics.return1UserOnSite());
     }
 }
