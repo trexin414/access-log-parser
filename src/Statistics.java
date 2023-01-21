@@ -10,12 +10,15 @@ public class Statistics {
     LocalDateTime minTime;
     LocalDateTime maxTime;
 
-    HashSet<String> pages = new HashSet<>();
-    HashSet<String> pagesWith404 = new HashSet<>();
+    HashSet<String> path = new HashSet<>();
+    HashSet<String> pathWith404 = new HashSet<>();
     HashSet<String> realIp = new HashSet<>();
+    HashSet<String> domains = new HashSet<>();
 
     HashMap<String, Integer> os = new HashMap<>();
     HashMap<String, Integer> browser = new HashMap<>();
+    HashMap<String, Integer> taskPerSec = new HashMap<>();
+    HashMap<String, Integer> users = new HashMap<>();
     HashMap<String, Double> percentOS = new HashMap<>();
 
     HashMap<String, Integer> anyInfo = new HashMap<>();
@@ -40,8 +43,8 @@ public class Statistics {
         if (this.minTime.compareTo(logEntry.getDate()) > 0) this.minTime = logEntry.getDate();
         if (this.maxTime.compareTo(logEntry.getDate()) < 0) this.maxTime = logEntry.getDate();
 
-        if (logEntry.getHttpCode() == 200) this.pages.add(logEntry.getHttpPage());
-        if (logEntry.getHttpCode() == 404) this.pagesWith404.add(logEntry.getHttpPage());
+        if (logEntry.getHttpCode() == 200) this.path.add(logEntry.getPathMethod());
+        if (logEntry.getHttpCode() == 404) this.pathWith404.add(logEntry.getPathMethod());
         if (logEntry.getUserAgent().getOs() == null) os = "withoutUserAgent";
         if (logEntry.getUserAgent().getBrowser() == null) browser = "withoutUserAgent";
 
@@ -55,6 +58,16 @@ public class Statistics {
         if (logEntry.getUserAgent().getBot()) this.anyInfo.put("botCount", this.anyInfo.get("botCount") + 1);
         else this.realIp.add(logEntry.getIp());
         if (errCode.contains(String.valueOf(logEntry.getHttpCode()).substring(0,1))) this.anyInfo.put("errCount", this.anyInfo.get("errCount") + 1);
+
+        countTaskPerSec(logEntry);
+        countUsers(logEntry);
+
+        if (!(logEntry.getHttpPage() == null)){
+            String str = logEntry.getHttpPage();
+            str = str.substring(str.indexOf("//") + 2);
+            str = str.substring(0, str.indexOf("/"));
+            domains.add(str);
+        }
     }
 
     public double getTrafficRate(){
@@ -62,12 +75,16 @@ public class Statistics {
         return (double) totalTraffic / duration.toHours();
     }
 
-    public HashSet<String> returnPages(){
-        return pages;
+    public HashSet<String> returnPath(){
+        return path;
     }
 
-    public HashSet<String> returnPages404(){
-        return pagesWith404;
+    public HashSet<String> returnPath404(){
+        return pathWith404;
+    }
+
+    public HashSet<String> returnPages(){
+        return domains;
     }
 
     public HashMap<String, Integer> returnOS(){
@@ -77,6 +94,7 @@ public class Statistics {
     public HashMap<String, Integer> returnBrowser(){
         return browser;
     }
+
 
     public double returnPplPerHour(){
         Duration duration = Duration.between(this.minTime, this.maxTime);
@@ -92,6 +110,14 @@ public class Statistics {
 
     public double return1UserOnSite(){
         return (anyInfo.get("lineCount") - anyInfo.get("botCount")) / (double) realIp.size();
+    }
+
+    public int returnPickTask(){
+        return this.taskPerSec.values().stream().max(Integer::compare).get();
+    }
+
+    public int returnMaxTaskByUser(){
+        return this.users.values().stream().max(Integer::compare).get();
     }
 
     public HashMap<String,Double> returnPercentOS(){
@@ -136,5 +162,23 @@ public class Statistics {
 //        System.out.println(check);
 
         return result;
+    }
+
+    private void countTaskPerSec(LogEntry logEntry){
+        String time = logEntry.getDate().toString();
+
+        if (!logEntry.getUserAgent().getBot())
+            if (this.taskPerSec.containsKey(time)) this.taskPerSec.put(time, this.taskPerSec.get(time) + 1);
+            else this.taskPerSec.put(time, 1);
+
+    }
+
+    private void countUsers(LogEntry logEntry){
+        String ip = logEntry.getIp();
+
+        if (!logEntry.getUserAgent().getBot()){
+            if (this.users.containsKey(ip)) this.users.put(ip, this.users.get(ip) + 1);
+            else this.users.put(ip, 1);
+        }
     }
 }

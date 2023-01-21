@@ -13,7 +13,7 @@ public class Helper {
     private static final Pattern datePattern = Pattern.compile("\\[((\\w+\\/){2}(\\d+\\:){3}\\d+\\ (\\+|-)\\d+)]");
     private static final Pattern methodPattern = Pattern.compile("(GET|POST)(\\s+\\/.*\\HTTP\\/\\w.\\w|\\w)");
     private static final Pattern codeAndSizePattern = Pattern.compile("\\ (\\d*) (\\d*) ");
-    private static final Pattern httpPagePattern = Pattern.compile("\"https:.*\"");
+    private static final Pattern httpPagePattern = Pattern.compile("\"https:.*\" ");
     private static final Pattern compatiblePattern = Pattern.compile("(compatible;.*)\\)");
     private static final Pattern botPattern = Pattern.compile("(\\w+)\\/");
     private static final Pattern osPattern = Pattern.compile("(Linux|Windows NT|Mac OS X)");
