@@ -25,10 +25,10 @@ public class LogEntry {
         if (result.containsKey("method")) this.method = result.get("method").equals("GET") ? HttpMethods.GET : HttpMethods.POST;
         else this.method = null;
 
-        this.pathMethod = result.containsKey("pathMethod") ? (String) result.get("pathMethod")  : null;
+        this.pathMethod = result.containsKey("method") ? (String) result.get("method")  : null;
         this.httpCode = result.containsKey("httpCode") ?  Integer.parseInt((String) result.get("httpCode"))  : 0;
         this.packageSize = result.containsKey("size") ? Integer.parseInt((String) result.get("size"))  : 0;
-        this.httpPage = result.containsKey("httpPage") ? (String) result.get("httpPage")  : null;
+        this.httpPage = result.containsKey("httpPath") ? (String) result.get("httpPath")  : null;
         this.userAgent = result.containsKey("ip") ? new UserAgent((String) result.get("uAgent"))  : null;
     }
 }

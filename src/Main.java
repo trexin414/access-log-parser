@@ -52,5 +52,9 @@ public class Main {
         }
 
         System.out.println(statistics.getTrafficRate());
+        statistics.returnPercentOS();
+//        System.out.println(statistics.returnPages());
+//        System.out.println(statistics.returnOS());
+//        System.out.println(statistics.returnPercentOS());
     }
 }

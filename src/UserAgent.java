@@ -1,5 +1,8 @@
+import lombok.Getter;
+
 import java.util.HashMap;
 
+@Getter
 public class UserAgent {
     private final String os;
     private final String browser;
